@@ -255,6 +255,7 @@ async function updateProduct() {
                 precio: price,
                 descripcion: description,
                 stock: stockNumber,
+                estado_stock: stock,
                 imagen_url: finalLogo
             })
             .eq('id', id);
