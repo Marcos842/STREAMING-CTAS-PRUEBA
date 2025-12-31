@@ -2,19 +2,23 @@
 // CREDENCIALES DE ADMINISTRADOR
 // ========================================
 
+
 // ⚠️ CAMBIA ESTAS CREDENCIALES POR LAS TUYAS
 const ADMIN_USER = CONFIG.ADMIN_USER;
-const ADMIN_PASSWORD = CONFIG.ADMIN_PASSWORD;
+const ADMIN_PASSWORD = CONFIG.ADMIN_PASS;
+
 
 
 // ========================================
 // FUNCIÓN DE LOGIN
 // ========================================
 
+
 function login() {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
     const errorMessage = document.getElementById('errorMessage');
+
 
     // Validar credenciales
     if (username === ADMIN_USER && password === ADMIN_PASSWORD) {
@@ -48,9 +52,11 @@ function login() {
     }
 }
 
+
 // ========================================
 // VERIFICAR SI YA ESTÁ LOGUEADO
 // ========================================
+
 
 window.addEventListener('DOMContentLoaded', () => {
     const isLoggedIn = localStorage.getItem('adminLoggedIn');
@@ -78,18 +84,22 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('username').focus();
 });
 
+
 // ========================================
 // PREVENIR ENVÍO DEL FORMULARIO CON ENTER
 // ========================================
+
 
 document.getElementById('loginForm').addEventListener('submit', (e) => {
     e.preventDefault();
     login();
 });
 
+
 // ========================================
 // DETECCIÓN DE TECLA ENTER
 // ========================================
+
 
 document.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
