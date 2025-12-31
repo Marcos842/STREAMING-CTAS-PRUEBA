@@ -228,11 +228,21 @@ function displayProducts(productList) {
         card.style.setProperty('--index', index);
         card.setAttribute('data-category', product.category);
         
-        // Determinar clase y texto del badge de stock
-        let stockClass = '';
-        let stockText = '';
-        
-        switch(product.stock) {
+        // 🔥 DETERMINAR ESTADO DE STOCK (prioridad: estado_stock > stock numérico)
+let stockStatus;
+if (product.estado_stock) {
+    stockStatus = product.estado_stock; // Desde base de datos
+} else if (product.stock === 'disponible' || product.stock === 'agotado' || product.stock === 'a-pedido') {
+    stockStatus = product.stock; // Desde defaultProducts
+} else if (typeof product.stock === 'number') {
+    stockStatus = product.stock > 0 ? 'disponible' : 'agotado';
+} else {
+    stockStatus = 'disponible'; // Por defecto
+}
+
+        // Determinar clase y texto del badge
+        let stockClass, stockText;
+        switch(stockStatus) {
             case 'disponible':
                 stockClass = 'disponible';
                 stockText = 'EN STOCK';
@@ -242,19 +252,20 @@ function displayProducts(productList) {
                 stockText = 'AGOTADO';
                 break;
             case 'a-pedido':
-                stockClass = 'pedido';
+                stockClass = 'a-pedido'; // ✅ CORREGIDO
                 stockText = 'A PEDIDO';
                 break;
             default:
                 stockClass = 'disponible';
                 stockText = 'EN STOCK';
         }
+
         
         card.innerHTML = `
             <div class="stock-badge ${stockClass}">${stockText}</div>
             <div class="product-logo">
-                <img src="${product.logo}" 
-                     alt="${product.name}" 
+                <img src="${product.logo || product.imagen_url}" 
+                     alt="${product.name || product.nombre}"
                      loading="lazy"
                      onerror="this.src='https://via.placeholder.com/150?text=Sin+Logo'">
             </div>
@@ -265,12 +276,12 @@ function displayProducts(productList) {
                 ${product.oldPrice && product.oldPrice > product.price ? 
                     `<span class="price-old">S/${product.oldPrice.toFixed(2)}</span>` : ''}
             </div>
-            <button class="product-btn" 
-                    ${product.stock === 'agotado' ? 'disabled' : ''} 
-                    onclick="contactWhatsApp('${product.name.replace(/'/g, "\\'")}', ${product.price})">
-                <i class="fas fa-${product.stock === 'agotado' ? 'times' : 'shopping-cart'}"></i>
-                ${product.stock === 'agotado' ? 'Agotado' : 'Comprar Ahora'}
+            <button class="product-btn" ${stockStatus === 'agotado' ? 'disabled' : ''} 
+            onclick="contactWhatsApp('${(product.name || product.nombre).replace(/'/g, '')}', ${product.price || product.precio})">
+            <i class="fas fa-${stockStatus === 'agotado' ? 'times' : 'shopping-cart'}"></i>
+            ${stockStatus === 'agotado' ? 'Agotado' : 'Comprar Ahora'}
             </button>
+
         `;
         
         grid.appendChild(card);
