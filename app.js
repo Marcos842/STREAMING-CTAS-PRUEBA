@@ -168,7 +168,7 @@ async function loadProductsFromSupabase() {
                 price: parseFloat(p.precio),
                 oldPrice: parseFloat(p.precio) * 2,
                 // ✅ CORRECTO:
-                stock: p.estado_stock || 'disponible',
+                stock: p.estado_stock, 
 
                 description: p.descripcion || '',
                 logo: p.imagen_url || 'https://via.placeholder.com/150?text=Sin+Logo'
