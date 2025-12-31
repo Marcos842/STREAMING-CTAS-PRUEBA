@@ -109,72 +109,50 @@ async function addProduct() {
 // ========================================
 async function loadProducts() {
     try {
-        console.log('📦 Cargando productos desde Supabase...');
-
+        console.log('🔄 Cargando productos desde Supabase...');
         const { data, error } = await supabaseClient
             .from('productos')
-            .select('*')
+            .select('*, estado_stock')
             .order('created_at', { ascending: false });
-
+        
         if (error) throw error;
-
+        
         const tbody = document.getElementById('productsTableBody');
-        
-        // ACTUALIZAR CONTADOR
         const countElement = document.getElementById('countNumber');
-        if (countElement) {
-            countElement.textContent = data.length;
-        }
         
-        console.log(`✅ Total de productos: ${data.length}`);
+        if (countElement) countElement.textContent = data.length;
+        console.log('✅', data.length, 'productos cargados');
         
         if (data.length === 0) {
             tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 30px; color: var(--text-secondary);">No hay productos registrados</td></tr>';
             return;
         }
-
+        
         tbody.innerHTML = data.map(product => {
-            // Determinar el badge de categoría
             let categoryBadge = '';
             switch(product.categoria) {
-                case 'streaming':
-                    categoryBadge = '<span class="badge badge-streaming">STREAMING</span>';
-                    break;
-                case 'software':
-                    categoryBadge = '<span class="badge badge-software">SOFTWARE</span>';
-                    break;
-                case 'otros':
-                    categoryBadge = '<span class="badge badge-otros">OTROS</span>';
-                    break;
-                default:
-                    categoryBadge = `<span class="badge">${product.categoria}</span>`;
+                case 'streaming': categoryBadge = '<span class="badge badge-streaming">STREAMING</span>'; break;
+                case 'software': categoryBadge = '<span class="badge badge-software">SOFTWARE</span>'; break;
+                default: categoryBadge = `<span class="badge">${product.categoria}</span>`;
             }
-
-            // Mapear stock de número a texto
-            let stockStatus = 'disponible';
-            if (product.stock === 0) stockStatus = 'agotado';
-            if (product.stock === 99) stockStatus = 'a-pedido';
-
-            // Determinar el badge de stock
+            
+            let stockStatus = product.estado_stock || 'disponible';
+            
             let stockBadge = '';
-            switch(stockStatus) {
-                case 'disponible':
-                    stockBadge = '<span style="background: linear-gradient(135deg, #00e5cc, #00c4a8); color: #0a0e1a; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-block;">✅ DISPONIBLE</span>';
-                    break;
-                case 'agotado':
-                    stockBadge = '<span style="background: linear-gradient(135deg, #ff4757, #c44569); color: white; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-block;">❌ AGOTADO</span>';
-                    break;
-                case 'a-pedido':
-                    stockBadge = '<span style="background: linear-gradient(135deg, #ffa502, #ff6348); color: white; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-block;">📦 A PEDIDO</span>';
-                    break;
+            if (stockStatus === 'disponible') {
+                stockBadge = '<span style="background: linear-gradient(135deg, #00e5cc, #00c4a8); color: #0a0e1a; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-block">✅ DISPONIBLE</span>';
+            } else if (stockStatus === 'agotado') {
+                stockBadge = '<span style="background: linear-gradient(135deg, #ff4757, #c44569); color: white; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-block">❌ AGOTADO</span>';
+            } else {
+                stockBadge = '<span style="background: linear-gradient(135deg, #ffa502, #ff6348); color: white; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-block">📦 A PEDIDO</span>';
             }
-
+            
             return `
                 <tr>
-                    <td><img src="${product.imagen_url}" alt="${product.nombre}" class="product-logo" onerror="this.src='https://via.placeholder.com/50?text=?'"></td>
-                    <td style="font-weight: 600;">${product.nombre}</td>
+                    <td><img src="${product.imagen_url || 'https://via.placeholder.com/50?text=?'} " alt="${product.nombre}" class="product-logo" onerror="this.src='https://via.placeholder.com/50?text=?'"></td>
+                    <td style="font-weight: 600">${product.nombre}</td>
                     <td>${categoryBadge}</td>
-                    <td style="font-weight: 700; color: var(--primary);">S/${parseFloat(product.precio).toFixed(2)}</td>
+                    <td style="font-weight: 700; color: var(--primary)">S/. ${parseFloat(product.precio).toFixed(2)}</td>
                     <td>${stockBadge}</td>
                     <td>
                         <button class="btn-edit" onclick="editProduct(${product.id})">
@@ -187,11 +165,11 @@ async function loadProducts() {
                 </tr>
             `;
         }).join('');
-
+        
     } catch (error) {
         console.error('❌ Error al cargar productos:', error);
         const tbody = document.getElementById('productsTableBody');
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 30px; color: #ff4757;">❌ Error al cargar productos</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 30px; color: #ff4757">❌ Error al cargar productos</td></tr>';
     }
 }
 
