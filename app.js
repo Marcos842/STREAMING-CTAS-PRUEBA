@@ -167,7 +167,7 @@ async function loadProductsFromSupabase() {
                 category: p.categoria || 'otros',
                 price: parseFloat(p.precio),
                 oldPrice: parseFloat(p.precio) * 2,
-                stock: p.stock > 0 ? 'disponible' : 'agotado',
+                stock: p.estado_stock || (p.stock > 0 ? 'disponible' : 'agotado'),
                 description: p.descripcion || '',
                 logo: p.imagen_url || 'https://via.placeholder.com/150?text=Sin+Logo'
             }));
