@@ -163,13 +163,11 @@ async function loadProductsFromSupabase() {
         if (data && data.length > 0) {
             products = data.map(p => ({
                 id: p.id,
-                name: p.nombre,
+                name: p.nombre, 
                 category: p.categoria || 'otros',
                 price: parseFloat(p.precio),
                 oldPrice: parseFloat(p.precio) * 2,
-                // ✅ CORRECTO:
-                stock: p.estado_stock, 
-
+                stock: p.estado_stock || (p.stock == 0 ? 'agotado' : p.stock == 99 ? 'a-pedido' : 'disponible'),
                 description: p.descripcion || '',
                 logo: p.imagen_url || 'https://via.placeholder.com/150?text=Sin+Logo'
             }));
@@ -193,6 +191,7 @@ async function loadProductsFromSupabase() {
         loadingFromSupabase = false;
     }
 }
+
 
 // ========================================
 // 🎨 MOSTRAR PRODUCTOS EN LA PÁGINA
