@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrador | Cuentas Streaming</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER MEJORADO -->
+        <div class="header">
+            <div class="header-left">
+                <h1>🔐 Panel de Administración</h1>
+            </div>
+            <div class="header-right">
+                <a href="index.html" class="btn-volver" target="_blank">
+                    <i class="fas fa-store"></i> Ver Tienda
+                </a>
+                <button onclick="logout()" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            </div>
+        </div>
+
+
+        <!-- GRID PRINCIPAL -->
+        <div class="admin-grid">
+            <!-- FORMULARIO AGREGAR PRODUCTO -->
+            <div class="form-section">
+                <h2><i class="fas fa-plus-circle"></i> Agregar Producto</h2>
+                <form id="productForm" onsubmit="event.preventDefault(); addProduct();">
+                    <div class="form-group">
+                        <label for="productName">
+                            <i class="fas fa-tag"></i> Nombre del Producto *
+                        </label>
+                        <input type="text" id="productName" placeholder="Ej: Netflix Premium" required>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="productCategory">
+                            <i class="fas fa-folder"></i> Categoría *
+                        </label>
+                        <select id="productCategory" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="streaming">📺 Streaming</option>
+                            <option value="software">💻 Software</option>
+                            <option value="otros">⭐ Otros</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="productPrice">
+                            <i class="fas fa-dollar-sign"></i> Precio (S/) *
+                        </label>
+                        <input type="number" id="productPrice" step="0.01" placeholder="12.00" required min="0">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="productOldPrice">
+                            <i class="fas fa-percentage"></i> Precio Anterior (S/)
+                        </label>
+                        <input type="number" id="productOldPrice" step="0.01" placeholder="24.00" min="0">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="productStock">
+                            <i class="fas fa-boxes"></i> Stock *
+                        </label>
+                        <select id="productStock" required>
+                            <option value="disponible">✅ Disponible</option>
+                            <option value="agotado">❌ Agotado</option>
+                            <option value="a-pedido">📦 A Pedido</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="productDescription">
+                            <i class="fas fa-align-left"></i> Descripción *
+                        </label>
+                        <textarea id="productDescription" placeholder="Cuenta premium con 4 pantallas HD..." required></textarea>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="productLogo">
+                            <i class="fas fa-image"></i> Logo URL (Opcional)
+                        </label>
+                        <input type="url" id="productLogo" placeholder="https://ejemplo.com/logo.png">
+                        <small style="color: var(--text-secondary); font-size: 12px; margin-top: 5px; display: block;">
+                            💡 Dejar vacío si no tienes logo
+                        </small>
+                    </div>
+
+
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-plus"></i> Agregar Producto
+                    </button>
+                </form>
+            </div>
+
+
+            <!-- LISTA DE PRODUCTOS -->
+            <div class="products-section">
+                <div class="products-header">
+                    <h2><i class="fas fa-list"></i> Productos Registrados</h2>
+                    <div class="products-count" id="productsCount">
+                        <i class="fas fa-cube"></i> <span id="countNumber">0</span> productos
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th>Logo</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <!-- Productos dinámicos -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL EDITAR -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> Editar Producto</h2>
+                <button class="btn-close" onclick="closeEditModal()" type="button">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+
+            <form onsubmit="event.preventDefault(); updateProduct();">
+                <input type="hidden" id="editId">
+
+
+                <div class="form-group">
+                    <label for="editName">
+                        <i class="fas fa-tag"></i> Nombre del Producto *
+                    </label>
+                    <input type="text" id="editName" required>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="editCategory">
+                        <i class="fas fa-folder"></i> Categoría *
+                    </label>
+                    <select id="editCategory" required>
+                        <option value="streaming">📺 Streaming</option>
+                        <option value="software">💻 Software</option>
+                        <option value="otros">⭐ Otros</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="editPrice">
+                        <i class="fas fa-dollar-sign"></i> Precio (S/) *
+                    </label>
+                    <input type="number" id="editPrice" step="0.01" required min="0">
+                </div>
+
+
+                <div class="form-group">
+                    <label for="editOldPrice">
+                        <i class="fas fa-percentage"></i> Precio Anterior (S/)
+                    </label>
+                    <input type="number" id="editOldPrice" step="0.01" min="0">
+                </div>
+
+
+                <div class="form-group">
+                    <label for="editStock">
+                        <i class="fas fa-boxes"></i> Stock *
+                    </label>
+                    <select id="editStock" required>
+                        <option value="disponible">✅ Disponible</option>
+                        <option value="agotado">❌ Agotado</option>
+                        <option value="a-pedido">📦 A Pedido</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="editDescription">
+                        <i class="fas fa-align-left"></i> Descripción *
+                    </label>
+                    <textarea id="editDescription" required></textarea>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="editLogo">
+                        <i class="fas fa-image"></i> Logo URL (Opcional)
+                    </label>
+                    <input type="url" id="editLogo" placeholder="https://ejemplo.com/logo.png">
+                    <small style="color: var(--text-secondary); font-size: 12px; margin-top: 5px; display: block;">
+                        💡 Dejar vacío para mantener el logo actual
+                    </small>
+                </div>
+
+
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save"></i> Guardar Cambios
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- NOTIFICACIÓN -->
+    <div id="notification" class="notification"></div>
+
+
+    <!-- ✅ SUPABASE CDN (AGREGAR ESTA LÍNEA) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- TU SCRIPT ADMIN -->
+     <script src="config.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

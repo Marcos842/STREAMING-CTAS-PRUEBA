@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cuentas premium de Netflix, Disney+, HBO Max, Spotify y más. Las mejores ofertas en streaming para Perú.">
+    <meta name="keywords" content="cuentas streaming peru, netflix peru, disney plus, spotify premium, canva pro">
+    <meta name="theme-color" content="#00e5cc">
+    <title>Cuentas Streaming Premium | Perú 🇵🇪</title>
+    
+    <!-- STYLES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- FAVICON -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+</head>
+<body>
+    
+    <!-- ====================================
+         HEADER
+    ==================================== -->
+    <header class="header">
+        <div class="header-container">
+            
+            <!-- LOGO -->
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🎬</span>
+                <span class="logo-text">CUENTAS STREAMING PREMIUM</span>
+            </a>
+            
+            <!-- BARRA DE BÚSQUEDA -->
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-box"
+                    placeholder="Buscar Netflix, Disney+, Spotify..."
+                    autocomplete="off"
+                    aria-label="Buscar productos"
+                >
+                <button class="clear-search" id="clearSearchBtn" style="display: none;" aria-label="Limpiar búsqueda">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- BOTÓN CONTACTO -->
+            <a href="https://wa.me/51925477024" class="cta-button" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-whatsapp"></i>
+                <span>Contactar</span>
+            </a>
+            
+        </div>
+    </header>
+
+    <!-- ====================================
+         CONTENIDO PRINCIPAL
+    ==================================== -->
+    <main class="main-content">
+        
+        <!-- FILTROS DE CATEGORÍAS -->
+        <section class="filters-section">
+            <div class="filters">
+                <button class="category-btn active" data-filter="todos" aria-label="Mostrar todos los productos">
+                    <i class="fas fa-th"></i>
+                    <span>Todos</span>
+                </button>
+                <button class="category-btn" data-filter="streaming" aria-label="Filtrar por Streaming">
+                    <i class="fas fa-tv"></i>
+                    <span>Streaming</span>
+                </button>
+                <button class="category-btn" data-filter="software" aria-label="Filtrar por Software">
+                    <i class="fas fa-laptop-code"></i>
+                    <span>Software</span>
+                </button>
+                <button class="category-btn" data-filter="otros" aria-label="Filtrar por Otros">
+                    <i class="fas fa-star"></i>
+                    <span>Otros</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- GRID DE PRODUCTOS -->
+        <section class="products-section">
+            <div class="products-grid" id="productsGrid">
+                <!-- Los productos se cargan dinámicamente desde app.js -->
+            </div>
+        </section>
+
+        <!-- MENSAJE SIN RESULTADOS -->
+        <div class="no-results" id="noResults" style="display: none;">
+            <div class="no-results-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h2>No se encontraron productos</h2>
+            <p>Intenta con otra búsqueda o categoría</p>
+            <button class="btn-reset" id="resetFilters">
+                <i class="fas fa-redo"></i> Mostrar todos
+            </button>
+        </div>
+
+    </main>
+
+    <!-- ====================================
+         FOOTER
+    ==================================== -->
+    <footer class="footer">
+        <div class="footer-content">
+            
+            <!-- CONTACTO -->
+            <div class="footer-contact">
+                <i class="fas fa-phone-alt"></i>
+                <span>Contáctanos:</span>
+                <a href="https://wa.me/51925477024" target="_blank" rel="noopener noreferrer">
+                    +51 925 477 024
+                </a>
+            </div>
+            
+            <!-- COPYRIGHT -->
+            <div class="footer-copyright">
+                <span>© 2025 Cuentas Streaming Premium</span>
+                <span class="footer-flag">🇵🇪 Perú</span>
+            </div>
+            
+            <!-- ADMIN -->
+            <div class="footer-admin">
+                <a href="login.html" title="Acceso administrador">
+                    <i class="fas fa-lock"></i> Panel Admin
+                </a>
+            </div>
+            
+        </div>
+    </footer>
+
+    <!-- ====================================
+         BOTÓN WHATSAPP FLOTANTE
+    ==================================== -->
+    <a href="https://wa.me/51925477024" 
+       class="whatsapp-float" 
+       target="_blank" 
+       rel="noopener noreferrer"
+       title="Contactar por WhatsApp"
+       aria-label="Contactar por WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- ====================================
+         BOTÓN SCROLL TO TOP
+    ==================================== -->
+    <button class="scroll-top" 
+            id="scrollTop" 
+            aria-label="Volver arriba"
+            title="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- ====================================
+         SCRIPTS
+    ==================================== -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+    
+</body>
+</html>
